@@ -25,6 +25,7 @@ export class LineChart {
     }
 
     private generateData(n: number, a: number, delta: number) {
+        this.points = n;
         // let data = d3.range(n).map(function (d) { return { "y": d3.randomUniform(10)() } });
         let data = d3.range(n).map(d => {
             this.angle = (a * d);
@@ -36,7 +37,24 @@ export class LineChart {
     }
 
     private updatePoints(n: number) {
+        this.points = n;
         this.initializeChart(this.dataline.slice(0,n+1))
+
+        // redraw line in chart
+        this.svg = d3.select("#linechart").transition();
+        this.svg.select('.line')
+            .duration(50)
+            .attr('d', this.line)
+    }
+
+    private updateAngle(a: number){
+        this.dataline = d3.range(25).map(d => {
+            this.angle = a * d;
+            let val = this.angle;
+            return { "y": val };
+        });
+
+        this.initializeChart(this.dataline.slice(0,this.points+1))
 
         // redraw line in chart
         this.svg = d3.select("#linechart").transition();

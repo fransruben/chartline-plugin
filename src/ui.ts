@@ -33,7 +33,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
   });
 
   angle_slider.addEventListener('input', () => {
-    chart.updateAngle(parseInt(angle_slider.value));
+    console.log('Angle: ' + angle_slider.value);
+    chart.updateAngle(parseFloat(angle_slider.value));
   });
 
   chart = new LineChart(n, a, delta);
