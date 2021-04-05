@@ -1,5 +1,10 @@
-<img src="<%= require('./logo.svg') %>">
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5"></p>
-<button id="create">Create</button>
-<button id="cancel">Cancel</button>
+<h2>Chartline creator</h2>
+<!-- Create a div where the graph will take place -->
+<div id="linechart"></div>
+
+<div class="slidecontainer">
+    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+</div>
+<button id="create" class='button button--primary'>Magic</button>
+<button id="reset" class='button button--secondary'>Reset</button>
+
