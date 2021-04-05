@@ -19,16 +19,24 @@ function parseSVG(rsvg) {
 var chart;
 
 document.addEventListener("DOMContentLoaded", function (event) {
-  
 
-  let slider = <HTMLInputElement>document.getElementById('nr_points')
-  let field = <HTMLInputElement>document.getElementById('count')
+  let points_slider = <HTMLInputElement>document.getElementById('nr_points');
+  let angle_slider = <HTMLInputElement>document.getElementById('angle');
+  let noise_slider = <HTMLInputElement>document.getElementById('noise');
 
-  slider.addEventListener('input', () => {
-    chart.updateData(parseInt(slider.value));
+  var n = parseInt(points_slider.value)
+  var a = parseInt(angle_slider.value)
+  var delta = parseInt(noise_slider.value)
+
+  points_slider.addEventListener('input', () => {
+    chart.updatePoints(parseInt(points_slider.value));
   });
 
-  chart = new LineChart(parseInt(slider.value));
+  angle_slider.addEventListener('input', () => {
+    chart.updateAngle(parseInt(angle_slider.value));
+  });
+
+  chart = new LineChart(n, a, delta);
 });
 
 document.getElementById('create').onclick = () => {
