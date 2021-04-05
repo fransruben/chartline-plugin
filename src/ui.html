@@ -1,10 +1,16 @@
-<h2>Chartline creator</h2>
-<!-- Create a div where the graph will take place -->
-<div id="linechart"></div>
+<div class="chart" id="linechart"></div>
 
-<div class="slidecontainer">
-    <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+<div class="settings">
+    <div class="setting_row">
+        <span class="slider_label"># Points</span>
+        <input type="range" min="3" max="15" value="6" class="slider" id="nr_points">
+    </div>
+    <div class="setting_row">
+        <span class="slider_label">Angle</span>
+        <input type="range" min="3" max="15" value="6" class="slider" id="angle">
+    </div>
 </div>
-<button id="create" class='button button--primary'>Magic</button>
-<button id="reset" class='button button--secondary'>Reset</button>
 
+<div class="btn-wrap">
+    <button id="create" class='button button--primary'>Add chartline</button>
+</div>

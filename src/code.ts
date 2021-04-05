@@ -1,5 +1,5 @@
 figma.showUI(__html__)
-figma.ui.resize(400, 600);
+figma.ui.resize(350, 376);
 
 figma.ui.onmessage = msg => {
   if (msg.type === 'create-line') {
@@ -13,6 +13,7 @@ figma.ui.onmessage = msg => {
     nodes.push(ln)
   
     figma.viewport.scrollAndZoomIntoView(nodes)
+    figma.closePlugin()
 
     // for (let i = 0; i < msg.count; i++) {
     //   const rect = figma.createRectangle()
@@ -25,6 +26,4 @@ figma.ui.onmessage = msg => {
     // figma.currentPage.selection = nodes
     // figma.viewport.scrollAndZoomIntoView(nodes)
   }
-
-  // figma.closePlugin()
 }
