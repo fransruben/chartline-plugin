@@ -19,18 +19,25 @@ export class LineChart {
     public line;
 
     constructor(n: number, a: number, delta: number) {
+        this.points = n;
         this.dataline = this.generateData(25, a, delta);
         this.initializeChart(this.dataline.slice(0,n+1));
         this.drawChart();
     }
 
     private generateData(n: number, a: number, delta: number) {
-        this.points = n;
-        // let data = d3.range(n).map(function (d) { return { "y": d3.randomUniform(10)() } });
-        let data = d3.range(n).map(d => {
+        console.log('Points: ' + n);
+        console.log('Angle: ' + a);
+        console.log('Delta: ' + delta);
+
+        this.noise = d3.range(n).map(d => {
+            let val = (Math.random() * 2 * delta - delta);
+            return val;
+        });
+
+        let data = d3.range(n).map((d, i) => {
             this.angle = (a * d);
-            this.noise = (Math.random() * delta - 0.5 * delta)
-            let val = this.angle + this.noise;
+            let val = this.angle + this.noise[i];
             return { "y": val };
         })
         return data;
@@ -48,9 +55,9 @@ export class LineChart {
     }
 
     private updateAngle(a: number){
-        this.dataline = d3.range(25).map(d => {
+        this.dataline = d3.range(25).map((d,i) => {
             this.angle = a * d;
-            let val = this.angle;
+            let val = this.angle + this.noise[i];
             return { "y": val };
         });
 
@@ -61,6 +68,13 @@ export class LineChart {
         this.svg.select('.line')
             .duration(250)
             .attr('d', this.line)
+    }
+
+    private updateNoise(delta: number){
+        let avg = d3.mean(this.noise);
+        this.noise = this.noise.map(d => {
+            return (d - (avg * delta));
+        });
     }
 
     private initializeChart(data: { y: number }[]): void {
@@ -97,16 +111,16 @@ export class LineChart {
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-        // 3. Call the x axis in a group tag
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + this.height + ")")
-            .call(d3.axisBottom(this.xScale));
+        // // 3. Call the x axis in a group tag
+        // svg.append("g")
+        //     .attr("class", "x axis")
+        //     .attr("transform", "translate(0," + this.height + ")")
+        //     .call(d3.axisBottom(this.xScale));
 
-        // 4. Call the y axis in a group tag
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(d3.axisLeft(this.yScale));
+        // // 4. Call the y axis in a group tag
+        // svg.append("g")
+        //     .attr("class", "y axis")
+        //     .call(d3.axisLeft(this.yScale));
 
         // 9. Append the path, bind the data, and call the line generator 
         svg.append("path")

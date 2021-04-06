@@ -25,16 +25,19 @@ document.addEventListener("DOMContentLoaded", function (event) {
   let noise_slider = <HTMLInputElement>document.getElementById('noise');
 
   var n = parseInt(points_slider.value)
-  var a = parseInt(angle_slider.value)
-  var delta = parseInt(noise_slider.value)
+  var a = parseFloat(angle_slider.value)
+  var delta = parseFloat(noise_slider.value)
 
   points_slider.addEventListener('input', () => {
     chart.updatePoints(parseInt(points_slider.value));
   });
 
   angle_slider.addEventListener('input', () => {
-    console.log('Angle: ' + angle_slider.value);
     chart.updateAngle(parseFloat(angle_slider.value));
+  });
+
+  noise_slider.addEventListener('input', () => {
+    chart.updateNoise(parseFloat(noise_slider.value));
   });
 
   chart = new LineChart(n, a, delta);
