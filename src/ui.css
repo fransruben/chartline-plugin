@@ -78,8 +78,13 @@ input {
   display: inline-block;
 }
 
+#create{
+  margin-top: 8px;
+}
+
 .btn-wrap{
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  margin: 0 20px 20px 20px;
+
 }

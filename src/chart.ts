@@ -26,10 +26,6 @@ export class LineChart {
     }
 
     private generateData(n: number, a: number, delta: number) {
-        console.log('Points: ' + n);
-        console.log('Angle: ' + a);
-        console.log('Delta: ' + delta);
-
         this.noise = d3.range(n).map(d => {
             let val = (Math.random() * 2 * delta - delta);
             return val;
@@ -43,15 +39,16 @@ export class LineChart {
         return data;
     }
 
+    private refresh(n: number, a: number, delta: number){
+        this.dataline = this.generateData(25, a, delta);
+        this.updatePoints(n);
+    }
+    
+    // Update functions (knobs)
     private updatePoints(n: number) {
         this.points = n;
         this.initializeChart(this.dataline.slice(0,n+1))
-
-        // redraw line in chart
-        this.svg = d3.select("#linechart").transition();
-        this.svg.select('.line')
-            .duration(50)
-            .attr('d', this.line)
+        this.drawLine(50);
     }
 
     private updateAngle(a: number){
@@ -62,21 +59,18 @@ export class LineChart {
         });
 
         this.initializeChart(this.dataline.slice(0,this.points+1))
+        this.drawLine(50);
+    }
 
-        // redraw line in chart
+    // Redraw chart line
+    private drawLine(t: number){
         this.svg = d3.select("#linechart").transition();
         this.svg.select('.line')
-            .duration(250)
+            .duration(t)
             .attr('d', this.line)
     }
 
-    private updateNoise(delta: number){
-        let avg = d3.mean(this.noise);
-        this.noise = this.noise.map(d => {
-            return (d - (avg * delta));
-        });
-    }
-
+    // Create chart functions
     private initializeChart(data: { y: number }[]): void {
         // Use the margin convention practice 
         this.margin = { top: 36, right: 36, bottom: 36, left: 36 };

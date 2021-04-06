@@ -29,10 +29,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
   var delta = parseFloat(noise_slider.value)
 
   points_slider.addEventListener('input', () => {
-    chart.updatePoints(parseInt(points_slider.value));
+    n = parseInt(points_slider.value);
+    chart.updatePoints(n);
   });
 
   angle_slider.addEventListener('input', () => {
+    a = parseFloat(angle_slider.value);
     chart.updateAngle(parseFloat(angle_slider.value));
   });
 
@@ -41,10 +43,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
   });
 
   chart = new LineChart(n, a, delta);
+
+  document.getElementById('create').onclick = () => {
+    let parsedLine = parseSVG(chart.line)
+    parent.postMessage({ pluginMessage: { type: 'create-line', parsedLine } }, '*')
+  }
+  
+  document.getElementById('refresh').onclick = () => {
+    chart.refresh(n, a, delta);
+  }
 });
 
-document.getElementById('create').onclick = () => {
-  let parsedLine = parseSVG(chart.line)
-  parent.postMessage({ pluginMessage: { type: 'create-line', parsedLine } }, '*')
-}
+
 
