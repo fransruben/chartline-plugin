@@ -4,11 +4,13 @@ export class LineChart {
 
     private chart_width = 350;
     private chart_height = 200;
+    private delta = 10;
 
     public dataline;
     public noise;
     public angle;
-    public points
+    public points;
+    public beta;
 
     public svg;
     public width;
@@ -18,10 +20,11 @@ export class LineChart {
     public yScale;
     public line;
 
-    constructor(n: number, a: number, delta: number) {
+    constructor(n: number, a: number, beta: number) {
         this.points = n;
-        this.dataline = this.generateData(25, a, delta);
-        this.initializeChart(this.dataline.slice(0,n+1));
+        this.beta = beta;
+        this.dataline = this.generateData(25, a, this.delta);
+        this.initializeChart(this.dataline.slice(0,n+1), beta);
         this.drawChart();
     }
 
@@ -39,15 +42,15 @@ export class LineChart {
         return data;
     }
 
-    private refresh(n: number, a: number, delta: number){
-        this.dataline = this.generateData(25, a, delta);
+    private refresh(n: number, a: number, beta: number){
+        this.dataline = this.generateData(25, a, this.delta);
         this.updatePoints(n);
     }
     
     // Update functions (knobs)
     private updatePoints(n: number) {
         this.points = n;
-        this.initializeChart(this.dataline.slice(0,n+1))
+        this.initializeChart(this.dataline.slice(0,n+1), this.beta)
         this.drawLine(50);
     }
 
@@ -58,7 +61,14 @@ export class LineChart {
             return { "y": val };
         });
 
-        this.initializeChart(this.dataline.slice(0,this.points+1))
+        this.initializeChart(this.dataline.slice(0,this.points+1), this.beta)
+        this.drawLine(50);
+    }
+
+    private updateSmooth(beta: number){
+        console.log('Beta: ' + beta)
+        this.beta = beta;
+        this.initializeChart(this.dataline.slice(0,this.points+1), this.beta)
         this.drawLine(50);
     }
 
@@ -71,7 +81,7 @@ export class LineChart {
     }
 
     // Create chart functions
-    private initializeChart(data: { y: number }[]): void {
+    private initializeChart(data: { y: number }[], beta: number = 0.5): void {
         // Use the margin convention practice 
         this.margin = { top: 36, right: 36, bottom: 36, left: 36 };
         this.width = this.chart_width - this.margin.left - this.margin.right
@@ -91,7 +101,7 @@ export class LineChart {
         var lineGenerator = d3.line<any>()
             .x((d, i) => this.xScale(i))
             .y(d => this.yScale(d.y))
-            .curve(d3.curveMonotoneX);
+            .curve(d3.curveBundle.beta(beta));
 
         // Generate a vectorPath from the data
         this.line = lineGenerator(data);
