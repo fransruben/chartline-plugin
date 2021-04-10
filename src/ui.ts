@@ -5,10 +5,11 @@ import { LineChart } from './chart'
 import '../node_modules/figma-plugin-ds/dist/figma-plugin-ds.css'
 import './ui.css'
 
+var chart;
 
-function parseSVG(rsvg) {
-  // parse SVG path format to what figma supports
-  let parsedSVG = rsvg.replace(/,/g, ' ')
+function parseSVG(raw_svg) {
+  // parse SVG path format to Figma readable format
+  let parsedSVG = raw_svg.replace(/,/g, ' ')
     .replace(/L/g, ' L ')
     .replace(/M/g, ' M ')
     .replace(/C/g, ' C ')
@@ -23,29 +24,60 @@ function sliderFill(elem) {
   let perc = ((val - min) / (max - min)) * 100;
 
   // Calculate linear gradient stops based on the slider position
-  if (perc > 50) { 
+  if (perc > 50) {
     var st1 = ', #75757566 0%';
     var st2 = ', #75757566 50%';
     var st3 = ', #050505 50%';
     var st4 = ', #050505 ' + perc + '%';
     var st5 = ', #75757566 ' + perc + '%';
     var st6 = ', #75757566 100%';
-   } else {
+  } else {
     var st1 = ', #75757566 0%';
     var st2 = ', #75757566 ' + perc + '%';
     var st3 = ', #050505 ' + perc + '%';
     var st4 = ', #050505 50%';
     var st5 = ', #75757566 50%';
     var st6 = ', #75757566 100%';
-   };
+  };
 
   elem.style.background = 'linear-gradient(to right' + st1 + st2 + st3 + st4 + st5 + st6 + ')';
 }
 
-var chart;
+function updateTypeUI(elm) {
+  let smooth_slider = <HTMLInputElement>document.getElementById('smooth');
+  let current = document.getElementsByClassName('active')
+
+  current[0].className = current[0].className.replace(' active', '');
+  elm.className += ' active';
+
+  if (elm.id == 'straight') {
+    smooth_slider.disabled = true;
+    smooth_slider.value = '0.5';
+    sliderFill(smooth_slider);
+  } else {
+    smooth_slider.disabled = false;
+  }
+}
+
+function openTab(tabname: string = 'simple'){
+  console.log(tabname.toLocaleLowerCase());
+
+//   // Hide all pages
+//   let pages = document.getElementsByClassName("page");
+//   pages.forEach()
+}
+
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
+  // Tabs
+  document.querySelectorAll('.tab').forEach(elm => {
+    elm.addEventListener('click', () => {
+      openTab(elm.innerHTML);
+    })
+  });
+
+  // Sliders
   let points_slider = <HTMLInputElement>document.getElementById('nr_points');
   let angle_slider = <HTMLInputElement>document.getElementById('angle');
   let smooth_slider = <HTMLInputElement>document.getElementById('smooth');
@@ -57,7 +89,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
   points_slider.addEventListener('input', () => {
     n = parseInt(points_slider.value);
     chart.updatePoints(n);
-    sliderFill(points_slider)
   });
 
   angle_slider.addEventListener('input', () => {
@@ -70,16 +101,34 @@ document.addEventListener("DOMContentLoaded", function (event) {
     chart.updateSmooth(beta);
   });
 
-  chart = new LineChart(n, a, beta);
+  // Button group
+  document.querySelectorAll('.btn-item').forEach(elm => {
+    elm.addEventListener('click', () => {
+      chart.updateType(elm.id);
+      updateTypeUI(elm);
+    })
+  });
 
+  // Buttons
   document.getElementById('create').onclick = () => {
     let parsedLine = parseSVG(chart.line)
     parent.postMessage({ pluginMessage: { type: 'create-line', parsedLine } }, '*')
   }
 
-  document.getElementById('refresh').onclick = () => {
+  document.getElementById('btn-refresh').onclick = () => {
     chart.refresh(n, a, beta);
   }
+
+  // Slider fill
+  document.querySelectorAll('.slider').forEach(elm => {
+    elm.addEventListener('input', () => {
+      sliderFill(elm)
+    })
+  });
+
+  // Create chart
+  chart = new LineChart(n, a, beta);
+
 });
 
 

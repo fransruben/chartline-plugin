@@ -1,21 +1,45 @@
-<div class="chart" id="linechart"></div>
-
-<div class="settings">
-    <div class="setting_row">
-        <span class="slider_label"># Points</span>
-        <input type="range" min="5" max="25" value="15" class="slider" id="nr_points">
-    </div>
-    <div class="setting_row">
-        <span class="slider_label">Angle</span>
-        <input type="range" min="-1" max="1" value="0" step="0.1" class="slider" id="angle">
-    </div>
-    <div class="setting_row">
-        <span class="slider_label">Smoothing</span>
-        <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="smooth">
+<div class="chart" id="linechart">
+    <div class="icon-button" id="btn-refresh">
+        <div class="icon icon--swap"></div>
     </div>
 </div>
 
+<!-- Tab bar -->
+<div class="tab_bar">
+    <div class="tab">Simple</div>
+    <div class="tab">Presets</div>
+</div>
+
+<!-- Simple -->
+<div class="page" id="simple">
+    <div class="settings">
+        <div class="setting_row">
+            <span class="slider_label">Points</span>
+            <input type="range" min="5" max="25" value="15" class="slider" id="nr_points">
+        </div>
+        <div class="setting_row">
+            <span class="slider_label">Slope</span>
+            <input type="range" min="-1" max="1" value="0" step="0.1" class="slider" id="angle">
+        </div>
+        <div class="setting_row">
+            <span class="slider_label">Smoothing</span>
+            <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="smooth">
+        </div>
+        <div class="setting_row">
+            <span class="slider_label">Type</span>
+            <div class="btn-group">
+                <div class="btn-item" id='straight'>Straight</div>
+                <div class="btn-item active" id='curved'>Curved</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Presets -->
+<!-- <div class="page" id="presets">
+    <p>Hello world</p>
+</div> -->
+
 <div class="btn-wrap">
-    <button id="refresh" class='button button--secondary'>Refresh</button>
     <button id="create" class='button button--primary'>Add chartline</button>
 </div>

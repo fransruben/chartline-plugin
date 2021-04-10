@@ -2,16 +2,23 @@ import * as d3 from 'd3'
 
 export class LineChart {
 
+    // Chart area
     private chart_width = 350;
     private chart_height = 200;
+    
+    // Dataline parameters
     private delta = 10;
-
+    private max_points = 25;
     public dataline;
-    public noise;
-    public angle;
-    public points;
-    public beta;
 
+    public points: number;
+    public angle: number;
+    public beta: number;
+    public noise: number[];
+    public type: boolean;
+
+
+    // Draw chart
     public svg;
     public width;
     public height;
@@ -23,8 +30,11 @@ export class LineChart {
     constructor(n: number, a: number, beta: number) {
         this.points = n;
         this.beta = beta;
-        this.dataline = this.generateData(25, a, this.delta);
-        this.initializeChart(this.dataline.slice(0,n+1), beta);
+        this.angle = a;
+        this.type = true;
+
+        this.dataline = this.generateData(this.max_points, a, this.delta);
+        this.initializeChart(this.dataline.slice(0,n+1), beta, this.type);
         this.drawChart();
     }
 
@@ -35,8 +45,7 @@ export class LineChart {
         });
 
         let data = d3.range(n).map((d, i) => {
-            this.angle = (a * d);
-            let val = this.angle + this.noise[i];
+            let val = (this.angle * d) + this.noise[i];
             return { "y": val };
         })
         return data;
@@ -50,38 +59,44 @@ export class LineChart {
     // Update functions (knobs)
     private updatePoints(n: number) {
         this.points = n;
-        this.initializeChart(this.dataline.slice(0,n+1), this.beta)
-        this.drawLine(50);
+        this.initializeChart(this.dataline.slice(0,n+1), this.beta, this.type)
+        this.drawLine();
     }
 
     private updateAngle(a: number){
+        this.angle = a
         this.dataline = d3.range(25).map((d,i) => {
-            this.angle = a * d;
-            let val = this.angle + this.noise[i];
+            let val = (a * d) + this.noise[i];
             return { "y": val };
         });
 
-        this.initializeChart(this.dataline.slice(0,this.points+1), this.beta)
-        this.drawLine(50);
+        this.initializeChart(this.dataline.slice(0,this.points+1), this.beta, this.type)
+        this.drawLine();
     }
 
     private updateSmooth(beta: number){
-        console.log('Beta: ' + beta)
         this.beta = beta;
-        this.initializeChart(this.dataline.slice(0,this.points+1), this.beta)
-        this.drawLine(50);
+        this.initializeChart(this.dataline.slice(0,this.points+1), this.beta, this.type)
+        this.drawLine();
+    }
+
+    private updateType(id){
+        let type = (id == "curved" ? true : false);
+        this.type = type;
+        this.initializeChart(this.dataline.slice(0,this.points+1), this.beta, type)
+        this.drawLine();
     }
 
     // Redraw chart line
-    private drawLine(t: number){
+    private drawLine(){
         this.svg = d3.select("#linechart").transition();
         this.svg.select('.line')
-            .duration(t)
+            .duration(50)
             .attr('d', this.line)
     }
 
     // Create chart functions
-    private initializeChart(data: { y: number }[], beta: number = 0.5): void {
+    private initializeChart(data: { y: number }[], beta: number = 0.5, type: boolean = true): void {
         // Use the margin convention practice 
         this.margin = { top: 36, right: 36, bottom: 36, left: 36 };
         this.width = this.chart_width - this.margin.left - this.margin.right
@@ -92,47 +107,51 @@ export class LineChart {
             .domain([0, data.length])
             .range([0, this.width]);
 
-        // Y scale will use the randomly generated number 
+        // Y scale will auto-scale 
         this.yScale = d3.scaleLinear()
             .domain(d3.extent(data, d => d.y))
             .range([this.height, 0]);
 
         // d3's line generator
-        var lineGenerator = d3.line<any>()
-            .x((d, i) => this.xScale(i))
-            .y(d => this.yScale(d.y))
-            .curve(d3.curveBundle.beta(beta));
+        if(type){
+            var lineGenerator = d3.line<any>()
+                .x((d, i) => this.xScale(i))
+                .y(d => this.yScale(d.y))
+                .curve(d3.curveBundle.beta(beta));
+        } else {
+            var lineGenerator = d3.line<any>()
+                .x((d, i) => this.xScale(i))
+                .y(d => this.yScale(d.y))
+        }
 
         // Generate a vectorPath from the data
         this.line = lineGenerator(data);
     }
 
     private drawChart(): void {
-        // 1. Add the SVG to the page and employ #2
+        // Add the SVG to the page
         var svg = d3.select("#linechart").append("svg")
             .attr("width", this.width + this.margin.left + this.margin.right)
             .attr("height", this.height + this.margin.top + this.margin.bottom)
             .append("g")
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-        // // 3. Call the x axis in a group tag
+        // // Draw X-axis
         // svg.append("g")
         //     .attr("class", "x axis")
         //     .attr("transform", "translate(0," + this.height + ")")
         //     .call(d3.axisBottom(this.xScale));
 
-        // // 4. Call the y axis in a group tag
+        // Draw Y-axis
         // svg.append("g")
         //     .attr("class", "y axis")
         //     .call(d3.axisLeft(this.yScale));
 
-        // 9. Append the path, bind the data, and call the line generator 
+        // Append the path and call the line generator 
         svg.append("path")
-            // .datum(dataset) // 10. Binds data to the line 
-            .attr("class", "line") // Assign a class for styling 
-            .attr("d", this.line); // 11. Calls the line generator 
+            .attr("class", "line")
+            .attr("d", this.line);
     }
-
 }
 
 

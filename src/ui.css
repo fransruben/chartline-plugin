@@ -12,6 +12,12 @@
   background-color: #fafafa;
 }
 
+#btn-refresh{
+  position: absolute;
+  left: 12px;
+  top: 156px;
+}
+
 input {
   border: none;
   outline: none;
@@ -21,6 +27,30 @@ input {
   fill: none;
   stroke: #18A0FB;
   stroke-width: 2;
+}
+
+/* Tab bar */
+.tab_bar{
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  height: 41px;
+  border-bottom: 1px solid var(--black1);
+}
+
+.tab{
+  line-height: 40px;
+  padding: 0 16px;
+  font-size: var(--font-size-xsmall);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--font-letter-spacing-pos-large);
+  color: #b3b3b3;
+}
+
+.tab:hover{
+  color: #333;
+  cursor: default;
 }
 
 /* Settings */
@@ -37,6 +67,10 @@ input {
   height: 32px;
   align-items: center;
   justify-items: center;
+}
+
+.setting_row:last-child{
+  margin-top: 8px;
 }
 
 .slider_label{
@@ -72,8 +106,39 @@ input {
   border: 1.5px solid var(--blue);
 }
 
-/* Button */
+/* Button group */
+.btn-group{
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
 
+.btn-item{
+  flex-grow: 1;
+  line-height: 32px;
+  font-size: var(--font-size-xsmall);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--font-letter-spacing-pos-large);
+  text-align: center;
+  color: #333;
+  border-radius: 2px;
+}
+
+.btn-item:first-child{
+  margin-right: 8px;
+}
+
+.btn-item:hover{
+  box-shadow: 0 0 0 1px var(--black1);
+  cursor: default;
+}
+
+.btn-item.active{
+  background-color: var(--black1);
+}
+
+
+/* Button */
 .button{
   display: inline-block;
 }
