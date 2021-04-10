@@ -30,6 +30,10 @@ input {
 }
 
 /* Tab bar */
+.page{
+  display: none;
+}
+
 .tab_bar{
   display: flex;
   flex-direction: row;

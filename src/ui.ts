@@ -57,7 +57,7 @@ function updateTypeUI(elm) {
   setActiveStyle(elm, '.btn-group');
 }
 
-function openTab(elm, tabname: string = 'simple'){
+function openTab(elm, tabname: string){
   let tab = tabname.toLocaleLowerCase();
 
   // Hide all pages
@@ -65,15 +65,9 @@ function openTab(elm, tabname: string = 'simple'){
   pages.forEach(page => {
     page.style.display = 'none';
   })
- 
-  // Remove all active classes
-  document.querySelectorAll('.tab').forEach(elm => {
-    elm.className = elm.className.replace(" active", "");
-  });
 
   // Show active page and tab
-  document.getElementById(tab).style.display = 'inline-block';
-    elm.className += ' active';
+  document.getElementById(tab).style.display = 'block';
 }
 
 
@@ -97,12 +91,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
   document.querySelectorAll('.tab').forEach(elm => {
     elm.addEventListener('click', () => {
       setActiveStyle(elm, '.tab_bar')
+      openTab(elm, elm.innerHTML);
     })
   });
 
-  // // Open default tab
-  // let tab = document.querySelector('.tab_bar').children[0] // first tab
-  // openTab(tab, tab.innerHTML);
+  // Open default tab
+  let tab = document.querySelector('.tab_bar').children[0] // first tab
+  openTab(tab, tab.innerHTML);
 
   // Sliders
   let points_slider = <HTMLInputElement>document.getElementById('nr_points');
