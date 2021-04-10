@@ -48,6 +48,10 @@ input {
   color: #b3b3b3;
 }
 
+.tab.active{
+  color: #333;
+}
+
 .tab:hover{
   color: #333;
   cursor: default;

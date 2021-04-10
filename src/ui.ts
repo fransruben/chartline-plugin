@@ -45,10 +45,6 @@ function sliderFill(elem) {
 
 function updateTypeUI(elm) {
   let smooth_slider = <HTMLInputElement>document.getElementById('smooth');
-  let current = document.getElementsByClassName('active')
-
-  current[0].className = current[0].className.replace(' active', '');
-  elm.className += ' active';
 
   if (elm.id == 'straight') {
     smooth_slider.disabled = true;
@@ -57,25 +53,56 @@ function updateTypeUI(elm) {
   } else {
     smooth_slider.disabled = false;
   }
+
+  setActiveStyle(elm, '.btn-group');
 }
 
-function openTab(tabname: string = 'simple'){
-  console.log(tabname.toLocaleLowerCase());
+function openTab(elm, tabname: string = 'simple'){
+  let tab = tabname.toLocaleLowerCase();
 
-//   // Hide all pages
-//   let pages = document.getElementsByClassName("page");
-//   pages.forEach()
+  // Hide all pages
+  let pages = document.querySelectorAll('.page') as NodeListOf<HTMLElement>
+  pages.forEach(page => {
+    page.style.display = 'none';
+  })
+ 
+  // Remove all active classes
+  document.querySelectorAll('.tab').forEach(elm => {
+    elm.className = elm.className.replace(" active", "");
+  });
+
+  // Show active page and tab
+  document.getElementById(tab).style.display = 'inline-block';
+    elm.className += ' active';
+}
+
+
+function setActiveStyle(active_elm: Element, parent_id:string){
+  // Get all children
+  var items = document.querySelectorAll(parent_id)[0].children;
+
+  // Remove active class from all children
+  for (let i = 0; i < items.length; i++){
+    items[i].className = items[i].className.replace(" active", "");
+  };
+
+  // Set active class
+  active_elm.className += " active";
 }
 
 
 document.addEventListener("DOMContentLoaded", function (event) {
-
+  
   // Tabs
   document.querySelectorAll('.tab').forEach(elm => {
     elm.addEventListener('click', () => {
-      openTab(elm.innerHTML);
+      setActiveStyle(elm, '.tab_bar')
     })
   });
+
+  // // Open default tab
+  // let tab = document.querySelector('.tab_bar').children[0] // first tab
+  // openTab(tab, tab.innerHTML);
 
   // Sliders
   let points_slider = <HTMLInputElement>document.getElementById('nr_points');
