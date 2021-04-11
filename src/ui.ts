@@ -1,5 +1,6 @@
 // Custom libraries
 import { LineChart } from './chart'
+import { Line } from './line'
 import * as presets from './presets'
 import * as util from './utils'
 
@@ -8,10 +9,19 @@ import '../node_modules/figma-plugin-ds/dist/figma-plugin-ds.css'
 import './ui.css'
 
 var chart;
+var line;
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-  console.log(presets.sinus(50));
+  var slider_points = <HTMLInputElement>document.getElementById('nr_points');
+  var slider_angle = <HTMLInputElement>document.getElementById('angle');
+  var slider_smooth = <HTMLInputElement>document.getElementById('smooth');
+  var type_switch = <HTMLInputElement>document.getElementById('type');
+
+  var n = parseInt(slider_points.value)
+  var a = parseFloat(slider_angle.value)
+  var beta = 1 - parseFloat(slider_smooth.value)
+  var type = true;
 
   // Tabs
   document.querySelectorAll('.tab').forEach(elm => {
@@ -21,38 +31,30 @@ document.addEventListener("DOMContentLoaded", function (event) {
     })
   });
 
-  // Open default tab
+  // Open first tab
   let tab = document.querySelector('.tab_bar').children[0] // first tab
   util.openTab(tab, tab.innerHTML);
 
-  // Sliders
-  let points_slider = <HTMLInputElement>document.getElementById('nr_points');
-  let angle_slider = <HTMLInputElement>document.getElementById('angle');
-  let smooth_slider = <HTMLInputElement>document.getElementById('smooth');
 
-  var n = parseInt(points_slider.value)
-  var a = parseFloat(angle_slider.value)
-  var beta = 1 - parseFloat(smooth_slider.value)
-
-  points_slider.addEventListener('input', () => {
-    n = parseInt(points_slider.value);
+  slider_points.addEventListener('input', () => {
+    let n = parseInt(slider_points.value);
     chart.updatePoints(n);
   });
 
-  angle_slider.addEventListener('input', () => {
-    a = parseFloat(angle_slider.value);
-    chart.updateAngle(parseFloat(angle_slider.value));
+  slider_angle.addEventListener('input', () => {
+    let a = parseFloat(slider_angle.value);
+    chart.updateAngle(parseFloat(slider_angle.value));
   });
 
-  smooth_slider.addEventListener('input', () => {
-    beta = 1 - parseFloat(smooth_slider.value);
+  slider_smooth.addEventListener('input', () => {
+    let beta = 1 - parseFloat(slider_smooth.value);
     chart.updateSmooth(beta);
   });
 
-  // Button group
+  // Radio button group
   document.querySelectorAll('.btn-item').forEach(elm => {
     elm.addEventListener('click', () => {
-      chart.updateType(elm.id);
+      chart.updateType(elm.checked);
       util.updateTypeUI(elm);
       util.setActiveStyle(elm, '.btn-group')
     })
@@ -65,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   }
 
   document.getElementById('btn-refresh').onclick = () => {
-    chart.refresh(n, a, beta);
+    // todo
   }
 
   // Slider fill
@@ -75,8 +77,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     })
   });
 
-  // Create chart
-  chart = new LineChart(n, a, beta);
+  line = new Line(n, a, beta, type);
+  chart = new LineChart(line, '#linechart');
 
 });
 
