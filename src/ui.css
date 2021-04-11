@@ -50,6 +50,7 @@ input {
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--font-letter-spacing-pos-large);
   color: #b3b3b3;
+  user-select: none; 
 }
 
 .tab.active{
@@ -130,6 +131,7 @@ input {
   text-align: center;
   color: #333;
   border-radius: 2px;
+  user-select: none; 
 }
 
 .btn-item:first-child{
