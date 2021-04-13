@@ -34,18 +34,6 @@ export function sliderFill(elm: HTMLInputElement) {
     elm.style.background = 'linear-gradient(to right' + st1 + st2 + st3 + st4 + st5 + st6 + ')';
 }
 
-export function updateTypeUI(elm: Element) {
-    let smooth_slider = <HTMLInputElement>document.getElementById('smooth');
-
-    if (elm.id == 'straight') {
-        smooth_slider.disabled = true;
-        smooth_slider.value = '0.5';
-        sliderFill(smooth_slider);
-    } else {
-        smooth_slider.disabled = false;
-    }
-}
-
 export function openTab(elm, tabname: string) {
     let tab = tabname.toLocaleLowerCase();
 

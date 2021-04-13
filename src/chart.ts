@@ -101,8 +101,9 @@ export class LineChart {
         this.path = lineGenerator(this.line.data.slice(0, this.line.points + 1));
     }
 
-    // Redraw chart line
     public drawLine() {
+        this.initializeChart(this.line)
+        // Draw only the chartline on the canvas
         this.svg = d3.select(this.id).transition();
         this.svg.select('.line')
             .duration(50)

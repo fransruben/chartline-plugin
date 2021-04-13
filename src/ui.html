@@ -1,8 +1,9 @@
 <div class="chart" id="linechart">
-    <div class="icon-button" id="btn-refresh">
+    <div class="icon-button" id="refresh">
         <div class="icon icon--swap"></div>
     </div>
 </div>
+
 
 <!-- Tab bar -->
 <div class="tab_bar">
@@ -29,14 +30,11 @@
             <span class="slider_label">Type</span>
 
             <div class="btn-group">
-                <label class="btn-item">
                     <input type="radio" name="type" id='straight' />
-                    Straight
-                </label>
-                <label class="btn-item active">
-                    <input type="radio" name="type" id='curved' />
-                    Curved
-                </label>
+                    <label class="radio-btn mr-xxsmall" for='straight'>Straight</label>
+                
+                    <input type="radio" name="type" id='curved' checked/>
+                    <label class="radio-btn" for='curved'>Curved</label>
             </div>
         </div>
     </div>

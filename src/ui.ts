@@ -23,6 +23,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
   var beta = 1 - parseFloat(slider_smooth.value)
   var type = true;
 
+  // Chart
+  document.getElementById('refresh').onclick = () => {
+    chart.line = new Line(chart.line.points, chart.line.angle, chart.line.beta, chart.line.type);
+    chart.drawLine();
+  }
+
   // Tabs
   document.querySelectorAll('.tab').forEach(elm => {
     elm.addEventListener('click', () => {
@@ -52,22 +58,25 @@ document.addEventListener("DOMContentLoaded", function (event) {
   });
 
   // Radio button group
-  document.querySelectorAll('.btn-item').forEach(elm => {
+  document.querySelectorAll('input[type="radio"]').forEach(elm => {
     elm.addEventListener('click', () => {
-      chart.updateType(elm.checked);
-      util.updateTypeUI(elm);
-      util.setActiveStyle(elm, '.btn-group')
+      if(elm.id == 'curved'){
+        chart.updateType(true);
+        slider_smooth.disabled = false;
+      } else {
+        chart.updateType(false);
+        slider_smooth.disabled = true;
+        slider_smooth.classList.add("disabled");
+        slider_smooth.value = "0.5";
+        util.sliderFill(slider_smooth);
+      };
     })
   });
 
   // Buttons
   document.getElementById('create').onclick = () => {
-    let parsedLine = util.parseSVG(chart.line)
+    let parsedLine = util.parseSVG(chart.path)
     parent.postMessage({ pluginMessage: { type: 'create-line', parsedLine } }, '*')
-  }
-
-  document.getElementById('btn-refresh').onclick = () => {
-    // todo
   }
 
   // Slider fill
