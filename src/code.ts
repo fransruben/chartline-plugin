@@ -9,6 +9,13 @@ figma.ui.onmessage = msg => {
 
     const ln = figma.createVector()
     ln.vectorPaths = [{windingRule: "NONE", data: msg.parsedLine}]
+    
+    // Set color of line
+    const color = {r:24/255, g:160/255, b:251/255 };
+    let strokes = clone(ln.strokes)
+    strokes[0].color = color;
+    ln.strokes = strokes;
+
     figma.currentPage.appendChild(ln)
     nodes.push(ln)
   
@@ -26,4 +33,27 @@ figma.ui.onmessage = msg => {
     // figma.currentPage.selection = nodes
     // figma.viewport.scrollAndZoomIntoView(nodes)
   }
+}
+
+function clone(val) {
+  const type = typeof val
+  if (val === null) {
+    return null
+  } else if (type === 'undefined' || type === 'number' ||
+             type === 'string' || type === 'boolean') {
+    return val
+  } else if (type === 'object') {
+    if (val instanceof Array) {
+      return val.map(x => clone(x))
+    } else if (val instanceof Uint8Array) {
+      return new Uint8Array(val)
+    } else {
+      let o = {}
+      for (const key in val) {
+        o[key] = clone(val[key])
+      }
+      return o
+    }
+  }
+  throw 'unknown'
 }

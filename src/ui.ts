@@ -1,6 +1,6 @@
 // Custom libraries
-import { LineChart } from './chart'
-import { Line } from './line'
+import { Chart } from './chart'
+import { simpleLine } from './line'
 import * as presets from './presets'
 import * as util from './utils'
 
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   // Chart
   document.getElementById('refresh').onclick = () => {
-    chart.line = new Line(chart.line.points, chart.line.angle, chart.line.beta, chart.line.type);
+    chart.line = new simpleLine(chart.line.points, chart.line.angle, chart.line.beta, chart.line.type);
     chart.drawLine();
   }
 
@@ -86,8 +86,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     })
   });
 
-  line = new Line(n, a, beta, type);
-  chart = new LineChart(line, '#linechart');
+  line = new simpleLine(n, a, beta, type);
+  chart = new Chart(line, '#linechart');
 
 });
 

@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
-import { genericLine } from './line'
-export class LineChart {
+import { Line } from './line'
+export class Chart {
 
     // Chart area
     private chart_width = 350;
@@ -9,7 +9,7 @@ export class LineChart {
     private showAxes = false;
 
     // Data
-    public line: genericLine; // Line object
+    public line: Line; // Line object
     public id; //id of chart element
 
     // Draw chart
@@ -21,16 +21,16 @@ export class LineChart {
     public yScale;
     public path;
 
-    constructor(line: genericLine, id: string) {
+    constructor(line: Line, id: string) {
         this.line = line;
         this.id = id;
         this.initializeChart(line);
         this.drawChart();
     }
 
-    private initializeChart(line: genericLine): void {
+    private initializeChart(line: Line): void {
         // Use the margin convention practice 
-        this.margin = { top: this.chart_margin, right: this.chart_margin, bottom: this.chart_margin, left: this.chart_margin };
+        this.margin = { top: 24, right: this.chart_margin, bottom: this.chart_margin, left: this.chart_margin };
         this.width = this.chart_width - this.margin.left - this.margin.right
         this.height = this.chart_height - this.margin.top - this.margin.bottom;
 

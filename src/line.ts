@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-export interface genericLine{
+export interface Line{
     data: { "y": number }[];
     points: number;
     angle?: number;
@@ -9,7 +9,7 @@ export interface genericLine{
     noise?: number;
 }
 
-export class Line {
+export class simpleLine {
 
     private delta = 10;
     private max_points = 25;
