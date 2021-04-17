@@ -9,7 +9,8 @@ export class Chart {
     private showAxes = false;
 
     // Data
-    public line: Line; // Line object
+    public line: Line;
+    public preset_line: Line;
     public id; //id of chart element
 
     // Draw chart
@@ -49,9 +50,9 @@ export class Chart {
 
         // Generate the right type of line
         if (line.type) {
-            this.smoothLine(line.beta);
+            this.smoothLine(line, line.beta);
         } else {
-            this.defaultLine();
+            this.defaultLine(line);
         }
     }
 
@@ -83,26 +84,26 @@ export class Chart {
     }
 
     // Smooth line
-    public smoothLine(beta: number) {
+    public smoothLine(line: Line, beta: number) {
         var lineGenerator = d3.line<any>()
             .x((d, i) => this.xScale(i))
             .y(d => this.yScale(d.y))
             .curve(d3.curveBundle.beta(beta));
 
-        this.path = lineGenerator(this.line.data.slice(0, this.line.points + 1));
+        this.path = lineGenerator(line.data.slice(0, line.points + 1));
     };
 
     // Straight line
-    public defaultLine() {
+    public defaultLine(line: Line) {
         var lineGenerator = d3.line<any>()
             .x((d, i) => this.xScale(i))
             .y(d => this.yScale(d.y))
 
-        this.path = lineGenerator(this.line.data.slice(0, this.line.points + 1));
+        this.path = lineGenerator(line.data.slice(0, line.points + 1));
     }
 
-    public drawLine() {
-        this.initializeChart(this.line)
+    public drawLine(line: Line) {
+        this.initializeChart(line)
         // Draw only the chartline on the canvas
         this.svg = d3.select(this.id).transition();
         this.svg.select('.line')
@@ -114,7 +115,7 @@ export class Chart {
     private updatePoints(n: number) {
         this.line.points = n;
         this.initializeChart(this.line)
-        this.drawLine();
+        this.drawLine(this.line);
     }
 
     private updateAngle(a: number) {
@@ -125,19 +126,19 @@ export class Chart {
         });
 
         this.initializeChart(this.line)
-        this.drawLine();
+        this.drawLine(this.line);
     }
 
     private updateSmooth(beta: number) {
         this.line.beta = beta;
         this.initializeChart(this.line)
-        this.drawLine();
+        this.drawLine(this.line);
     }
 
     private updateType(type: boolean) {
         this.line.type = type;
         this.initializeChart(this.line)
-        this.drawLine();
+        this.drawLine(this.line);
     }
 
 }

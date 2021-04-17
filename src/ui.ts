@@ -1,7 +1,7 @@
 // Custom libraries
 import { Chart } from './chart'
-import { simpleLine } from './line'
-import * as presets from './presets'
+import { Line, RandomLine } from './line'
+import { Presets } from './presets'
 import * as util from './utils'
 
 // Styles
@@ -10,9 +10,12 @@ import './ui.css'
 
 var chart;
 var line;
+var pr = new Presets();
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
+  var btn_refresh = document.getElementById('refresh');
+  
   var slider_points = <HTMLInputElement>document.getElementById('nr_points');
   var slider_angle = <HTMLInputElement>document.getElementById('angle');
   var slider_smooth = <HTMLInputElement>document.getElementById('smooth');
@@ -25,15 +28,22 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   // Chart
   document.getElementById('refresh').onclick = () => {
-    chart.line = new simpleLine(chart.line.points, chart.line.angle, chart.line.beta, chart.line.type);
-    chart.drawLine();
+    chart.line = new RandomLine(chart.line.points, chart.line.angle, chart.line.beta, chart.line.type);
+    chart.drawLine(chart.line);
   }
 
   // Tabs
   document.querySelectorAll('.tab').forEach(elm => {
     elm.addEventListener('click', () => {
       util.setActiveStyle(elm, '.tab_bar')
-      util.openTab(elm, elm.innerHTML);
+      util.openTab(elm, elm.id.replace("tab_",""));
+      if(elm.id === "tab_simple"){
+        chart.drawLine(chart.line)
+        btn_refresh.style.display = 'flex';
+      } else if(elm.id === "tab_presets"){
+        chart.drawLine(chart.preset_line)
+        btn_refresh.style.display = 'none';
+      }
     })
   });
 
@@ -41,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   let tab = document.querySelector('.tab_bar').children[0] // first tab
   util.openTab(tab, tab.innerHTML);
 
-
+  // Setting - Sliders
   slider_points.addEventListener('input', () => {
     let n = parseInt(slider_points.value);
     chart.updatePoints(n);
@@ -57,10 +67,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
     chart.updateSmooth(beta);
   });
 
-  // Radio button group
-  document.querySelectorAll('input[type="radio"]').forEach(elm => {
+  // Slider fill
+  document.querySelectorAll('.slider').forEach(elm => {
+    elm.addEventListener('input', () => {
+      util.sliderFill(<HTMLInputElement>elm)
+    })
+  });
+
+  // Setting - Type
+  document.querySelectorAll('input[name="type"]').forEach(elm => {
     elm.addEventListener('click', () => {
-      if(elm.id == 'curved'){
+      if (elm.id == 'curved') {
         chart.updateType(true);
         slider_smooth.disabled = false;
       } else {
@@ -73,21 +90,23 @@ document.addEventListener("DOMContentLoaded", function (event) {
     })
   });
 
-  // Buttons
+  // Add button
   document.getElementById('create').onclick = () => {
     let parsedLine = util.parseSVG(chart.path)
     parent.postMessage({ pluginMessage: { type: 'create-line', parsedLine } }, '*')
   }
 
-  // Slider fill
-  document.querySelectorAll('.slider').forEach(elm => {
-    elm.addEventListener('input', () => {
-      util.sliderFill(<HTMLInputElement>elm)
+  // Presets
+  document.querySelectorAll('input[name="preset_item"]').forEach(elm => {
+    elm.addEventListener('click', () => {
+      chart.preset_line = pr.preset_list.find(pr => pr.name === elm.id);
+      chart.drawLine(chart.preset_line);
     })
   });
 
-  line = new simpleLine(n, a, beta, type);
+  line = new RandomLine(n, a, beta, type);
   chart = new Chart(line, '#linechart');
+  chart.preset_line = pr.preset_list[0];
 
 });
 

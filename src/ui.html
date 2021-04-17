@@ -7,8 +7,8 @@
 
 <!-- Tab bar -->
 <div class="tab_bar">
-    <div class="tab active">Simple</div>
-    <div class="tab">Presets</div>
+    <div class="tab active" id="tab_simple">Simple</div>
+    <div class="tab" id="tab_presets">Presets</div>
 </div>
 
 <!-- Simple -->
@@ -30,11 +30,11 @@
             <span class="slider_label">Type</span>
 
             <div class="btn-group">
-                    <input type="radio" name="type" id='straight' />
-                    <label class="radio-btn mr-xxsmall" for='straight'>Straight</label>
-                
-                    <input type="radio" name="type" id='curved' checked/>
-                    <label class="radio-btn" for='curved'>Curved</label>
+                <input type="radio" name="type" id='straight' />
+                <label class="radio-btn mr-xxsmall" for='straight'>Straight</label>
+
+                <input type="radio" name="type" id='curved' checked="checked" />
+                <label class="radio-btn" for='curved'>Curved</label>
             </div>
         </div>
     </div>
@@ -42,8 +42,25 @@
 
 <!-- Presets -->
 <div class="page" id="presets">
-    <p>Hello world</p>
-</div>
+    <ul class="preset_list">
+        <li>
+            <input type="radio" name="preset_item" id='sin' checked="checked"/>
+            <label class="preset_label" for='sin'>Sine wave</label>
+        </li>
+        <li>
+            <input type="radio" name="preset_item" id='pdf' />
+            <label class="preset_label" for='pdf'>Normal distribution</label>
+        </li>
+        <li>
+            <input type="radio" name="preset_item" id='scurve' />
+            <label class="preset_label" for='scurve'>S-curve</label>
+        </li>
+        <li>
+            <input type="radio" name="preset_item" id='tone' />
+            <label class="preset_label" for='tone'>Tone burst</label>
+        </li>
+    </ul>
+</div>  
 
 <div class="btn-wrap">
     <button id="create" class='button button--primary'>Add chartline</button>

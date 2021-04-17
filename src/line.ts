@@ -9,7 +9,7 @@ export interface Line{
     noise?: number;
 }
 
-export class simpleLine {
+export class RandomLine {
 
     private delta = 10;
     private max_points = 25;
