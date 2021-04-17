@@ -106,11 +106,11 @@ input {
   border: 1.5px solid #050505;
 }
 
-.slider:hover::-webkit-slider-thumb {
+.slider:hover:enabled::-webkit-slider-thumb {
   background-color: #050505;
 }
 
-.slider:active::-webkit-slider-thumb {
+.slider:active:enabled::-webkit-slider-thumb {
   background-color: var(--blue);
   border: 1.5px solid var(--blue);
 }
@@ -125,10 +125,14 @@ input {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 20px;
+  padding: 16px 20px 8px 20px;
   margin: 0;
   height: 176px;
   overflow: auto;
+}
+
+.preset_list li:last-of-type{
+  margin-bottom: 0;
 }
 
 .preset_list li{
